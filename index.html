@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>드림캐처 🌙 - 학생 맞춤 수면 진단 & 푸드 솔루션</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: {
+                        night: {
+                            900: '#0b132b',
+                            800: '#1c2541',
+                            700: '#2a3558',
+                        },
+                        dream: {
+                            purple: '#a5b4fc',
+                            lavender: '#c084fc',
+                            yellow: '#fde047',
+                            pink: '#f472b6'
+                        }
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(15px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+                            '50%': { opacity: '0.8', transform: 'scale(1.05)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' }
+                        }
+                    },
+                    animation: {
+                        fadeIn: 'fadeIn 0.5s ease-out forwards',
+                        pulseGlow: 'pulseGlow 4s infinite ease-in-out',
+                        float: 'float 3s infinite ease-in-out'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b132b;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        /* Glassmorphism utility */
+        .glass-card {
+            background: rgba(28, 37, 65, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glass-input {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(165, 180, 252, 0.25);
+        }
+        .glass-input:focus {
+            border-color: #fde047;
+            outline: none;
+            box-shadow: 0 0 12px rgba(253, 224, 71, 0.3);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b132b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a3558;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a5b4fc;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between font-sans relative selection:bg-dream-lavender selection:text-night-900">
+
+    <!-- Glowing Stars / Background Spheres -->
+    <div class="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-indigo-900/30 blur-[120px] pointer-events-none animation-pulseGlow"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[45vw] h-[45vw] rounded-full bg-purple-900/30 blur-[140px] pointer-events-none animation-pulseGlow" style="animation-delay: 2s;"></div>
+
+    <!-- Header Navigation -->
+    <header class="w-full max-w-5xl mx-auto px-6 py-6 flex justify-between items-center z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-dream-yellow flex items-center justify-center text-night-900 font-black text-xl shadow-lg shadow-purple-500/20 animate-float">
+                🌙
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-dream-yellow via-dream-purple to-dream-pink">
+                    드림캐처 Lab
+                </h1>
+                <p class="text-xs text-indigo-200/70">학생 맞춤형 수면 처방전</p>
+            </div>
+        </div>
+        <div class="hidden sm:flex items-center gap-2 bg-indigo-950/60 border border-indigo-500/20 rounded-full px-4 py-1.5 text-xs text-indigo-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>중·고등학생 & 대학생 필수 헬스케어</span>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl mx-auto px-4 sm:px-6 py-4 z-10 flex-grow">
+        
+        <!-- Hero Title -->
+        <section class="text-center mb-8">
+            <span class="inline-block px-3 py-1 mb-3 text-xs font-semibold tracking-wider text-dream-yellow uppercase bg-yellow-500/10 rounded-full border border-yellow-500/20">
+                수면 장애 & 피로 회복 특효약
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-snug">
+                지금 당신의 수면은 <span class="text-dream-yellow underline decoration-wavy decoration-purple-500 underline-offset-8">몇 점</span>인가요?
+            </h2>
+            <p class="text-sm sm:text-base text-indigo-200/80 mt-3 max-w-xl mx-auto">
+                언제 자고 언제 일어나는지 알려주세요! 당신의 뇌 건강 상태와 오늘 밤 수면의 질을 급상승시켜줄 맞춤 푸드를 알려드릴게요.
+            </p>
+        </section>
+
+        <!-- INPUT CARD -->
+        <div id="inputCard" class="glass-card rounded-3xl p-6 sm:p-8 transition-all duration-300">
+            <form id="sleepForm" class="space-y-6" onsubmit="event.preventDefault(); analyzeSleep();">
+                
+                <!-- Student Grade Selector -->
+                <div>
+                    <label class="block text-xs sm:text-sm font-semibold text-indigo-200 mb-2">
+                        🎓 학년 / 연령대 선택
+                    </label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" id="btnSchool" onclick="setStudentType('school')" class="student-btn active flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-dream-purple/40 bg-indigo-900/80 text-white font-medium text-sm transition-all hover:border-dream-yellow">
+                            <i class="fa-solid font-bold fa-school text-dream-purple"></i>
+                            <span>중·고등학생 <span class="text-xs text-indigo-300">(권장 8~10h)</span></span>
+                        </button>
+                        <button type="button" id="btnUni" onclick="setStudentType('uni')" class="student-btn flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-indigo-800 bg-night-900/50 text-indigo-300 font-medium text-sm transition-all hover:border-dream-yellow">
+                            <i class="fa-solid font-bold fa-graduation-cap text-dream-purple"></i>
+                            <span>대학생 / 취준생 <span class="text-xs text-indigo-300">(권장 7~9h)</span></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Time Inputs Section -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    
+                    <!-- Bedtime Selector -->
+                    <div class="bg-indigo-950/40 p-4 rounded-2xl border border-indigo-500/10">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="p-2 rounded-lg bg-purple-500/20 text-dream-purple">
+                                <i class="fa-solid fa-moon"></i>
+                            </span>
+                            <div>
+                                <h3 class="text-sm font-bold text-white">잠드는 시간 (취침)</h3>
+                                <p class="text-xs text-indigo-300">침대에 눕는 시간을 선택하세요</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <select id="bedHour" class="glass-input rounded-xl px-2 py-2.5 text-center text-sm font-semibold text-white">
+                                <!-- JS Populated -->
+                            </select>
+                            <select id="bedMin" class="glass-input rounded-xl px-2 py-2.5 text-center text-sm font-semibold text-white">
+                                <!-- JS Populated -->
+                            </select>
+                            <select id="bedAmpm" class="glass-input rounded-xl px-2 py-2.5 text-center text-sm font-semibold text-dream-yellow">
+                                <option value="PM" selected>오후 (PM)</option>
+                                <option value="AM">오전 (AM)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Wake Time Selector -->
+                    <div class="bg-indigo-950/40 p-4 rounded-2xl border border-indigo-500/10">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="p-2 rounded-lg bg-amber-500/20 text-dream-yellow">
+                                <i class="fa-solid fa-sun"></i>
+                            </span>
+                            <div>
+                                <h3 class="text-sm font-bold text-white">일어나는 시간 (기상)</h3>
+                                <p class="text-xs text-indigo-300">알람이 울려 깨는 시간입니다</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <select id="wakeHour" class="glass-input rounded-xl px-2 py-2.5 text-center text-sm font-semibold text-white">
+                                <!-- JS Populated -->
+                            </select>
+                            <select id="wakeMin" class="glass-input rounded-xl px-2 py-2.5 text-center text-sm font-semibold text-white">
+                                <!-- JS Populated -->
+                            </select>
+                            <select id="wakeAmpm" class="glass-input rounded-xl px-2 py-2.5 text-center text-sm font-semibold text-dream-yellow">
+                                <option value="AM" selected>오전 (AM)</option>
+                                <option value="PM">오후 (PM)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Action Button -->
+                <button type="submit" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-dream-purple via-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-lg shadow-lg shadow-purple-500/30 transform active:scale-[0.98] transition-all flex items-center justify-center gap-2 group">
+                    <span>수면 상태 심각도 진단하기</span>
+                    <i class="fa-solid fa-wand-magic-sparkles group-hover:rotate-12 transition-transform"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- RESULTS CONTAINER (Hidden by default) -->
+        <div id="resultSection" class="hidden space-y-6 mt-8 animate-fadeIn">
+            
+            <!-- Result Overview Card -->
+            <div id="statusCard" class="glass-card rounded-3xl p-6 sm:p-8 border-l-8 transition-all">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-2 mb-3">
+                            <span id="severityBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                                진단 결과
+                            </span>
+                            <span id="studentTypeLabel" class="text-xs text-indigo-300 bg-indigo-900/60 px-2.5 py-1 rounded-full border border-indigo-500/20">
+                                중·고등학생 기준
+                            </span>
+                            <span id="cycleLabel" class="text-xs text-dream-purple bg-purple-900/40 px-2.5 py-1 rounded-full border border-purple-500/30">
+                                90분 수면 주기 분석 포함
+                            </span>
+                        </div>
+                        
+                        <h3 id="sleepDurationText" class="text-2xl sm:text-3xl font-extrabold text-white mb-2">
+                            총 수면시간: <span class="text-dream-yellow">0시간 0분</span>
+                        </h3>
+                        
+                        <p id="severityTitle" class="text-lg font-bold text-dream-purple mb-3">
+                            수면 결과 분석 중...
+                        </p>
+
+                        <!-- Expanded Detailed Diagnostic Feedback Container -->
+                        <div class="space-y-4 mt-4">
+                            <!-- Brain Science & Academic Impact -->
+                            <div class="bg-indigo-950/60 p-4 rounded-2xl border border-indigo-500/20">
+                                <h4 class="text-sm font-bold text-dream-yellow mb-1.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-brain"></i> 뇌 과학 & 학업 능률 영향 진단
+                                </h4>
+                                <p id="brainImpactText" class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
+                                    상세 분석 내용이 들어갑니다.
+                                </p>
+                            </div>
+
+                            <!-- Physical & Mental Health Impact -->
+                            <div class="bg-indigo-950/60 p-4 rounded-2xl border border-indigo-500/20">
+                                <h4 class="text-sm font-bold text-dream-purple mb-1.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-heart-pulse"></i> 피로도 & 컨디션 영향
+                                </h4>
+                                <p id="bodyImpactText" class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
+                                    신체적 영향 분석이 들어갑니다.
+                                </p>
+                            </div>
+
+                            <!-- Customized Sleep Action Plan -->
+                            <div class="bg-indigo-900/40 p-4 rounded-2xl border border-purple-500/30">
+                                <h4 class="text-sm font-bold text-emerald-300 mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-compass"></i> 오늘 밤 당장 실천하는 수면 리듬 처방전
+                                </h4>
+                                <ul id="actionPlanList" class="space-y-2 text-xs sm:text-sm text-indigo-100/90 list-disc list-inside">
+                                    <!-- Dynamic Action items -->
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Visual Gauge Gauge / Score -->
+                    <div class="flex flex-col items-center justify-center bg-indigo-950/70 p-5 rounded-2xl border border-indigo-500/20 min-w-[190px] text-center self-center md:self-start">
+                        <span class="text-xs text-indigo-300 font-semibold mb-1">수면 충족도 점수</span>
+                        <div class="relative w-28 h-28 flex items-center justify-center my-2">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                <path class="text-indigo-900/80" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path id="gaugeProgress" class="text-dream-yellow transition-all duration-1000 ease-out" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <span id="gaugeScore" class="absolute text-2xl font-black text-white">0%</span>
+                        </div>
+                        <span id="gaugeSubtext" class="text-[11px] text-indigo-300 mt-1">권장 수면량 대비</span>
+                        <span id="cycleCount" class="text-[11px] font-bold text-dream-yellow mt-1 bg-yellow-500/10 px-2 py-0.5 rounded-full border border-yellow-500/20">
+                            90분 수면 주기 0회
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommended Food Section -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span>🍌</span>
+                            <span>수면의 질을 바꾸는 맞춤 힐링 푸드</span>
+                        </h3>
+                        <p class="text-xs sm:text-sm text-indigo-200/80 mt-1">
+                            약 대신 음식으로! 수면 호르몬(멜라토닌/트립토판) 합성을 돕는 학생 추천 처방
+                        </p>
+                    </div>
+                    <span class="hidden sm:inline-block text-xs bg-purple-500/20 text-dream-purple px-3 py-1 rounded-full border border-purple-500/30">
+                        카드를 터치해보세요!
+                    </span>
+                </div>
+
+                <!-- Food Cards Grid -->
+                <div id="foodGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Student Sleep Golden Rules -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-indigo-950/80 to-purple-950/50">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb text-dream-yellow"></i>
+                    <span>성적을 올려주는 학생 전용 "수면 골든 타임" 수칙</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-indigo-900/40 p-4 rounded-2xl border border-indigo-500/10 flex items-start gap-3">
+                        <div class="text-2xl">☕</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">오후 2시 이후 카페인 금지</h4>
+                            <p class="text-xs text-indigo-200/70 mt-1">에너지드링크, 핫식스, 몬스터, 아메리카노는 반감기가 6시간! Night 시간 집중력을 저해합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-indigo-900/40 p-4 rounded-2xl border border-indigo-500/10 flex items-start gap-3">
+                        <div class="text-2xl">📱</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">소등 30분 전 스마트폰 멀리</h4>
+                            <p class="text-xs text-indigo-200/70 mt-1">화면의 블루라이트는 뇌에 '아직 낮'이라는 착각을 주어 멜라토닌 분비를 완전 차단합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-indigo-900/40 p-4 rounded-2xl border border-indigo-500/10 flex items-start gap-3">
+                        <div class="text-2xl">⚡</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">15분 파워 냅(Power Nap)</h4>
+                            <p class="text-xs text-indigo-200/70 mt-1">점심시간이나 야자 전 15~20분 짧은 수면은 뇌 피로물질(아데노신)을 씻어내 기억력을 높입니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recalculate Button -->
+            <div class="text-center pt-2">
+                <button onclick="scrollToTop()" class="px-6 py-3 rounded-xl bg-indigo-900/60 hover:bg-indigo-800 border border-indigo-500/30 text-indigo-200 text-sm font-semibold transition-all">
+                    <i class="fa-solid fa-rotate-left mr-2"></i>시간 다시 설정하기
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Food Detail Modal -->
+    <div id="foodModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-card max-w-md w-full rounded-3xl p-6 relative border border-indigo-400/30 transform scale-95 transition-transform duration-300" id="modalCard">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-indigo-900/80 hover:bg-indigo-800 text-indigo-300 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="text-center mb-4">
+                <span id="modalEmoji" class="text-5xl block mb-2 animate-bounce">🥛</span>
+                <h3 id="modalTitle" class="text-2xl font-black text-white">따뜻한 우유</h3>
+                <span id="modalTag" class="inline-block mt-1 px-3 py-0.5 rounded-full text-xs font-bold bg-purple-500/20 text-dream-purple">
+                    천연 천장제
+                </span>
+            </div>
+
+            <div class="space-y-3 text-sm text-indigo-100">
+                <div class="bg-indigo-950/60 p-3 rounded-xl border border-indigo-500/10">
+                    <strong class="text-dream-yellow block text-xs mb-1">💡 왜 수면에 좋을까요?</strong>
+                    <p id="modalWhy" class="text-xs text-indigo-200 leading-relaxed"></p>
+                </div>
+                <div class="bg-indigo-950/60 p-3 rounded-xl border border-indigo-500/10">
+                    <strong class="text-dream-purple block text-xs mb-1">⏰ 학생 섭취 꿀팁</strong>
+                    <p id="modalTip" class="text-xs text-indigo-200 leading-relaxed"></p>
+                </div>
+            </div>
+
+            <button onclick="closeModal()" class="mt-5 w-full py-3 rounded-xl bg-dream-purple text-night-900 font-bold text-sm hover:bg-purple-300 transition-colors">
+                확인했어요!
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-5xl mx-auto px-6 py-6 text-center text-xs text-indigo-300/50 z-10">
+        <p>© 2026 드림캐처 Lab for Students. 모든 학생들의 건강하고 깊은 밤을 응원합니다. 🌙</p>
+    </footer>
+
+    <script>
+        // Global State
+        let studentType = 'school'; // 'school' | 'uni'
+
+        // Expanded Food Database with Deep Mechanisms
+        const foodDatabase = [
+            {
+                id: 'milk',
+                name: '따뜻한 우유 & 꿀',
+                emoji: '🥛',
+                badge: '트립토판 ➡️ 멜라토닌',
+                shortDesc: '뇌의 행복 물질 세로토닌과 수면 호르몬 멜라토닌의 확실한 원료 공급원입니다.',
+                why: '우유에 풍부한 필수 아미노산 "트립토판"은 체내에서 낮 동안 "세로토닌"으로 전환되었다가 밤이 되면 강력한 수면 유도 물질인 "멜라토닌"으로 변합니다. 칼슘 성분은 뇌 세포의 흥분을 가라앉혀 수면 장애를 차단합니다.',
+                tip: '잠들기 45분~1시간 전, 약 40~50도의 미지근한 상태로 마시는 것이 가장 좋습니다. 꿀 한 티스푼을 넣으면 인슐린 수치가 약간 상승하여 트립토판이 뇌 장벽(BBB)을 통과하는 효율이 극대화됩니다.'
+            },
+            {
+                id: 'banana',
+                name: '바나나',
+                emoji: '🍌',
+                badge: '근육 이완 & B6 공급',
+                shortDesc: '시험과 공부 스트레스로 경직된 목과 어깨 근육을 이완시키는 천연 신경 안정제입니다.',
+                why: '마그네슘과 칼륨은 부교감 신경을 활성화하여 과도하게 긴장된 근육 단백질을 이완시킵니다. 또한 바나나에 함유된 비타민 B6는 뇌 안에서 트립토판이 세로토닌 및 멜라토닌으로 합성될 때 필수적으로 소모되는 보조 효소 역할을 합니다.',
+                tip: '취침 1~2시간 전에 섭취하면 자다가 쥐가 나거나 다리가 답답해서 깨는 증상(불편 다리 증후군)을 대폭 예방할 수 있습니다. 공부 후 밤 야식 대용으로 최고입니다.'
+            },
+            {
+                id: 'tartcherry',
+                name: '타트체리 & 생체리',
+                emoji: '🍒',
+                badge: '천연 멜라토닌 직접 보충',
+                shortDesc: '합성 수면제 없이 식물성 멜라토닌을 직접 체내로 공급해 입면 시간을 대폭 단축합니다.',
+                why: '타트체리는 자체에 천연 멜라토닌 함량이 일반 체리의 50배 이상 높습니다. 수면의 질이 크게 떨어져 있거나 시차 적응, 시험 전날 긴장감으로 잠들기 어려운 학생들의 입면 시간을 평균 15~20분 가량 당겨줍니다.',
+                tip: '100% 타트체리 원액 주스를 미지근한 물에 1:3 비율로 희석하여 저녁 식사 후 또는 잠들기 1시간 전에 섭취하면 최고 효과를 얻을 수 있습니다.'
+            },
+            {
+                id: 'nuts',
+                name: '구운 아몬드 & 호두',
+                emoji: '🥜',
+                badge: '오메가3 & 마그네슘',
+                shortDesc: '뇌 피로물질을 제거하고 야간 혈당 스파이크를 방지하여 깊은 잠을 유지합니다.',
+                why: '호두의 오메가-3 지방산은 뇌 세포막을 부드럽게 만들어 수면 호르몬 수용체의 감수성을 높여줍니다. 아몬드에 풍부한 마그네슘은 수면 조절 신경 물질인 GABA 수치를 늘려 뇌를 쿨다운(Cool-down)시킵니다.',
+                tip: '자기 전 한 주먹(약 10~12알) 정도 천천히 씹어 먹으면 야간 저혈당으로 인해 새벽에 깨는 현상을 완벽히 방지해 줍니다.'
+            },
+            {
+                id: 'tea',
+                name: '카모마일 & 루이보스 차',
+                emoji: '🍵',
+                badge: '아피제닌 신경 진정',
+                shortDesc: '뇌 가바(GABA) 수용체에 작용하여 시험 중 중압감과 불안감을 부드럽게 완화합니다.',
+                why: '카모마일의 "아피제닌(Apigenin)" 플라보노이드 항산화 물질은 뇌 수용체와 결합하여 자율신경계 중 교감신경을 낮추고 부교감신경을 유도하여 졸음을 유발합니다. 따뜻한 온기가 위장을 안정시키는 효과도 큽니다.',
+                tip: '카페인이 0%이므로 수험생 밤 공부 마무리에 이상적입니다. 티백을 80도 따뜻한 물에 3~5분간 충분히 우려내어 향을 천천히 호흡하며 마셔보세요.'
+            },
+            {
+                id: 'lettuce',
+                name: '상추 & 대추차',
+                emoji: '🥬',
+                badge: '락투카리움 & 갈락탄',
+                shortDesc: '예로부터 검증된 천연 진정 성분으로 얕은 잠(N1, N2 단계)을 깊은 수면으로 전환합니다.',
+                why: '상추 잎 줄기를 꺾을 때 나오는 우윳빛 즙 속 "락투카리움(Lactucarium)"은 진통 및 진정 작용이 뛰어나 신경 파동을 가라앉힙니다. 대추의 갈락탄과 자일로스 성분은 자율신경의 긴장을 낮춥니다.',
+                tip: '저녁 식사 시 상추를 풍성하게 곁들여 먹거나, 말린 대추를 씨째 달인 따뜻한 대추차를 밤 공부 후 마시면 깊은 서파 수면에 도움이 됩니다.'
+            }
+        ];
+
+        function analyzeSleep() {
+            // Get Bedtime
+            let bedH = parseInt(document.getElementById('bedHour').value);
+            const bedM = parseInt(document.getElementById('bedMin').value);
+            const bedAmpm = document.getElementById('bedAmpm').value;
+
+            // Get Wake Time
+            let wakeH = parseInt(document.getElementById('wakeHour').value);
+            const wakeM = parseInt(document.getElementById('wakeMin').value);
+            const wakeAmpm = document.getElementById('wakeAmpm').value;
+
+            // Convert to 24 Hour format
+            if (bedAmpm === 'PM' && bedH !== 12) bedH += 12;
+            if (bedAmpm === 'AM' && bedH === 12) bedH = 0;
+
+            if (wakeAmpm === 'PM' && wakeH !== 12) wakeH += 12;
+            if (wakeAmpm === 'AM' && wakeH === 12) wakeH = 0;
+
+            // Calculate total minutes
+            let bedTotalMin = bedH * 60 + bedM;
+            let wakeTotalMin = wakeH * 60 + wakeM;
+
+            // Across midnight handling
+            if (wakeTotalMin <= bedTotalMin) {
+                wakeTotalMin += 24 * 60; // Add 24 hours
+            }
+
+            const diffMin = wakeTotalMin - bedTotalMin;
+            const hours = Math.floor(diffMin / 60);
+            const minutes = diffMin % 60;
+            const decimalHours = hours + (minutes / 60);
+
+            // Display Section
+            const resultSec = document.getElementById('resultSection');
+            resultSec.classList.remove('hidden');
+
+            // Render Output Data with Deep Clinical Feedback
+            updateDiagnosisUI(decimalHours, hours, minutes);
+
+            // Scroll Smoothly to Results
+            resultSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function updateDiagnosisUI(decimalHours, hours, minutes) {
+            const durationText = document.getElementById('sleepDurationText');
+            const statusCard = document.getElementById('statusCard');
+            const severityBadge = document.getElementById('severityBadge');
+            const severityTitle = document.getElementById('severityTitle');
+            const studentTypeLabel = document.getElementById('studentTypeLabel');
+            const gaugeProgress = document.getElementById('gaugeProgress');
+            const gaugeScore = document.getElementById('gaugeScore');
+            const cycleCount = document.getElementById('cycleCount');
+
+            const brainImpactText = document.getElementById('brainImpactText');
+            const bodyImpactText = document.getElementById('bodyImpactText');
+            const actionPlanList = document.getElementById('actionPlanList');
+
+            studentTypeLabel.innerText = studentType === 'school' ? '중·고등학생 기준 (목표 8h)' : '대학생 기준 (목표 7.5h)';
+            durationText.innerHTML = `총 수면시간: <span class="text-dream-yellow">${hours}시간 ${minutes}분</span>`;
+
+            // Calculate 90-min Sleep Cycles (1 cycle = ~1.5 hours)
+            const cycles = (decimalHours / 1.5).toFixed(1);
+            cycleCount.innerText = `90분 수면 주기 약 ${cycles}회`;
+
+            // Target baseline hours
+            const targetHours = studentType === 'school' ? 8.0 : 7.5;
+            let percent = Math.min(Math.round((decimalHours / targetHours) * 100), 100);
+            
+            // Gauge Circular animation
+            setTimeout(() => {
+                gaugeProgress.setAttribute('stroke-dasharray', `${percent}, 100`);
+                gaugeScore.innerText = `${percent}%`;
+            }, 100);
+
+            // Deep Multi-tiered Diagnosis Logic
+            if (decimalHours >= 8.0) {
+                // Tier 1: OPTIMAL SLEEP (>= 8 Hours)
+                statusCard.className = "glass-card rounded-3xl p-6 sm:p-8 border-l-8 border-emerald-400 bg-gradient-to-r from-emerald-950/30 via-indigo-950/60 to-indigo-950/80";
+                severityBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+                severityBadge.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> 최고에요! (최적 골든 수면)';
+                severityTitle.innerText = "🟢 퍼펙트! 뇌의 장기 기억 저장과 신경 재생이 완벽히 이뤄지는 수면 상태입니다.";
+                
+                brainImpactText.innerHTML = `
+                    충분한 <strong>서파 수면(Deep Sleep)</strong> 및 <strong>REM 수면</strong> 단계가 4~5회 이상 원활히 순환되었습니다. 낮 동안 암기한 공식, 지문, 복잡한 개념들이 해마(Hippocampus)에서 대뇌피질로 효율적으로 이동하여 <strong>장기 기억(Long-term Memory)</strong>으로 안착했습니다. 이해력, 창의적 문제 해결 능력 및 집중 유지력이 최고조에 달합니다.
+                `;
+                
+                bodyImpactText.innerHTML = `
+                    수면 중 성장호르몬 분비와 면역 세포(T세포) 활성화가 극대화되었습니다. 뇌 속 세척 시스템인 <strong>'글림프계(Glymphatic System)'</strong>가 활발히 작동하여 낮 동안 축적된 신경 독소(베타 아밀로이드)와 피로 물질을 완벽히 씻어냈습니다. 낮 동안 졸음이나 브레인 포그 현상이 거의 발생하지 않는 최고의 컨디션입니다.
+                `;
+
+                actionPlanList.innerHTML = `
+                    <li><strong>일정한 기상 시각 유지:</strong> 주말에도 평소보다 1시간 이상 늦게 깨지 않도록 유지하여 생체 시계(Circadian Rhythm)를 지켜주세요.</li>
+                    <li><strong>아침 햇빛 10분 쬐기:</strong> 깨어나자마자 눈으로 햇빛을 받으면 뇌의 멜라토닌 분비가 멈추고 15시간 뒤 밤 수면 스위치가 다시 켜집니다.</li>
+                    <li><strong>현재 수면 패턴 고수:</strong> 시험 직전에도 잠을 줄이지 말고 지금처럼 8시간 수면을 유지하는 것이 시험 당일 실수 방지에 가장 유리합니다.</li>
+                `;
+
+            } else if (decimalHours >= 6.5) {
+                // Tier 2: MILD DEPRIVATION (6.5 ~ 7.9 Hours)
+                statusCard.className = "glass-card rounded-3xl p-6 sm:p-8 border-l-8 border-amber-400 bg-gradient-to-r from-amber-950/30 via-indigo-950/60 to-indigo-950/80";
+                severityBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30";
+                severityBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> 경고 (경미한 수면 빚)';
+                severityTitle.innerText = "🟡 약간의 수면 부족! 오후 인지 속도 감소와 식곤증이 나타날 수 있습니다.";
+                
+                brainImpactText.innerHTML = `
+                    필수 최소 수면은 확보했으나, 마지막 1~2회의 REM 수면 구간이 단축되었습니다. 이는 복잡한 응용 문제 해결력이나 신경민감도 완화에 살짝 아쉬움을 줍니다. 점심 식사 이후 2시~4시 사이에 뇌의 기상 신호가 낮아지면서 강한 피로감이나 멍함(Brain Fog)을 경험할 확률이 높아집니다.
+                `;
+                
+                bodyImpactText.innerHTML = `
+                    자율신경계 중 교감신경의 긴장이 완전히 풀어지지 않아 눈의 피로도와 목·어깨 결림이 자각될 수 있습니다. 스트레스 호르몬인 코르티솔 수치가 살짝 상승하여 당분이나 자극적인 음식이 땡길 수 있습니다.
+                `;
+
+                actionPlanList.innerHTML = `
+                    <li><strong>오늘 밤 30분 일찍 취침:</strong> 취침 시간을 딱 30분만 당겨도 수면 주기 1단계를 추가로 확보하여 집중력이 크게 개선됩니다.</li>
+                    <li><strong>점심 파워 냅(Power Nap):</strong> 오후 1시~2시 사이에 15분간 눈을 감고 누워있거나 엎드려 단잠을 자면 뇌의 아데노신 피로 물질이 청소됩니다.</li>
+                    <li><strong>오후 2시 이후 카페인 전면 금지:</strong> 핫식스나 에너지 음료는 수면의 깊이를 30% 이상 방해하므로 차라리 시원한 물을 마시는 것이 좋습니다.</li>
+                `;
+
+            } else if (decimalHours >= 5.0) {
+                // Tier 3: MODERATE DEPRIVATION (5.0 ~ 6.4 Hours)
+                statusCard.className = "glass-card rounded-3xl p-6 sm:p-8 border-l-8 border-orange-500 bg-gradient-to-r from-orange-950/30 via-indigo-950/60 to-indigo-950/80";
+                severityBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-500/20 text-orange-300 border border-orange-500/30";
+                severityBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> 심각 (학업 효율 급락)';
+                severityTitle.innerText = "🟠 비상! 뇌의 정보 처리 능력과 암기 유지력이 눈에 띄게 떨어진 상태입니다.";
+                
+                brainImpactText.innerHTML = `
+                    수면 시간이 5~6시간대에 불과하면 뇌의 <strong>해마(Hippocampus)</strong> 입력 기능이 마비 상태에 들어갑니다. 아무리 오래 책상에 앉아 있어도 밑 빠진 독에 물 붓듯이 기억이 금방 휘발됩니다. 단순 계산 실수나 지문 오독률이 평소보다 2배 이상 급증할 수 있습니다.
+                `;
+                
+                bodyImpactText.innerHTML = `
+                    면역세포 수치가 하락하여 감기나 입안 짓무름, 눈 다래끼 등에 취약해집니다. 신경계 오버히트로 인해 감정 조절이 어려워지고 짜증이나 불안감이 늘어나 공부 지속 가능성을 해칩니다.
+                `;
+
+                actionPlanList.innerHTML = `
+                    <li><strong>수면 유도 푸드 필수 섭취:</strong> 자기 45분 전 따뜻한 우유나 바나나를 섭취하여 멜라토닌 합성을 급속히 도와주세요.</li>
+                    <li><strong>스마트폰 암전(Darkening) 수칙:</strong> 잠들기 40분 전부터 핸드폰을 다른 방에 두거나 '수면 모드'로 설정해 블루라이트를 차단하세요.</li>
+                    <li><strong>벼락치기 중단:</strong> 무리하게 밤을 새우는 공부는 불합격의 지름길입니다. 오늘 밤은 11시 이전에 무조건 불을 끄세요.</li>
+                `;
+
+            } else {
+                // Tier 4: SEVERE DEPRIVATION (< 5.0 Hours)
+                statusCard.className = "glass-card rounded-3xl p-6 sm:p-8 border-l-8 border-rose-600 bg-gradient-to-r from-rose-950/40 via-indigo-950/60 to-indigo-950/80";
+                severityBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30";
+                severityBadge.innerHTML = '<i class="fa-solid fa-skull-crossbones mr-1"></i> 초위험 (경고: 뇌 독소 누적)';
+                severityTitle.innerText = "🔴 위험 수준! 음주 상태와 유사한 정도로 판단력과 인지기능이 저하되어 있습니다.";
+                
+                brainImpactText.innerHTML = `
+                    5시간 미만의 수면은 혈중 알코올 농도 0.05%(음주운전 단속 수준) 상태의 뇌 반응 속도와 동일합니다. 뇌는 스스로를 보호하기 위해 낮 시간 동안 몇 초씩 뇌가 꺼지는 <strong>'미세 수면(Micro-sleep)'</strong> 현상을 일으킵니다. 시험장에서 치명적인 실수를 유발하는 최악의 원인입니다.
+                `;
+                
+                bodyImpactText.innerHTML = `
+                    체내 염증 수치가 급증하고 심혈관계 부담이 극심해집니다. 식욕 억제 호르몬(렙틴)은 줄어들고 식욕 촉진 호르몬(그렐린)이 폭발하여 밤에 고칼로리 야식을 폭식하게 되는 악순환에 직면합니다.
+                `;
+
+                actionPlanList.innerHTML = `
+                    <li><strong>긴급 컨디션 회복 모드:</strong> 오늘 하루 동안은 무리한 고난도 문제 풀이를 피하고, 핵심 개념 요약만 짧게 복습하세요.</li>
+                    <li><strong>자다 깼을 때 대처:</strong> 자다가 깨서 잠이 안 올 때는 침대에서 스마트폰을 보지 말고, 어두운 조명 아래서 카모마일 차를 마시며 마음을 안정시키세요.</li>
+                    <li><strong>최소 7.5시간 보충 수면:</strong> 오늘 밤은 모든 공부 계획을 멈추고 최소 5개 수면 주기(7.5시간) 이상 수면을 취해 뇌를 리셋하세요.</li>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
